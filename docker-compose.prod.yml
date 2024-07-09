@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:15.3
+    container_name: db
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+  backend:
+    build:
+      dockerfile: Dockerfile.prod
+    container_name: backend
+    depends_on:
+      - db
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
+
+
+volumes:
+  postgres-data:
