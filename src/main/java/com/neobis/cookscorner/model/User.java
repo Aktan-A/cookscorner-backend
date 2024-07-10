@@ -13,13 +13,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"profileImage"})
+@ToString(exclude = {"profileImage", "savedRecipes", "likedRecipes"})
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
@@ -43,6 +44,12 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne
     @JoinColumn(name = "profile_image_id")
     private Image profileImage;
+
+    @ManyToMany(mappedBy = "savedByUsers")
+    private Set<Recipe> savedRecipes;
+
+    @ManyToMany(mappedBy = "likedByUsers")
+    private Set<Recipe> likedRecipes;
 
     public User(
             String email,
