@@ -1,9 +1,6 @@
 package com.neobis.cookscorner.service;
 
-import com.neobis.cookscorner.dto.LoginRequestDto;
-import com.neobis.cookscorner.dto.LoginResponseDto;
-import com.neobis.cookscorner.dto.RegisterRequestDto;
-import com.neobis.cookscorner.dto.RegisterResponseDto;
+import com.neobis.cookscorner.dto.auth.*;
 
 public interface AuthService {
 
@@ -11,4 +8,5 @@ public interface AuthService {
 
     LoginResponseDto login(LoginRequestDto loginRequestDto);
 
+    RefreshAccessTokenResponseDto refreshAccessToken(RefreshAccessTokenRequestDto refreshAccessTokenRequestDto);
 }

@@ -1,4 +1,4 @@
-package com.neobis.cookscorner.dto;
+package com.neobis.cookscorner.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -25,6 +25,7 @@ public class SwaggerConfig {
                 .components(new Components()
                         .addSecuritySchemes(schemeName, new SecurityScheme()
                                 .name(schemeName)
+                                .type(SecurityScheme.Type.HTTP)
                                 .bearerFormat(bearerFormat)
                                 .in(SecurityScheme.In.HEADER)
                                 .scheme(scheme)
