@@ -1,6 +1,6 @@
 package com.neobis.cookscorner.service;
 
-import com.neobis.cookscorner.dto.*;
+import com.neobis.cookscorner.dto.auth.*;
 
 public interface AuthService {
 

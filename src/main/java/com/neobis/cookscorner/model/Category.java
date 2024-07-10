@@ -15,7 +15,7 @@ import java.util.Objects;
 @ToString
 public class Category extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     public Category(String name) {

@@ -20,7 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"profileImage", "savedRecipes", "likedRecipes"})
+@ToString(exclude = {"profileImage", "savedRecipes"})
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)

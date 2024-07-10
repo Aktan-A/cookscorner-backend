@@ -1,6 +1,6 @@
 package com.neobis.cookscorner.controller;
 
-import com.neobis.cookscorner.dto.*;
+import com.neobis.cookscorner.dto.auth.*;
 import com.neobis.cookscorner.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

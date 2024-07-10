@@ -1,6 +1,6 @@
 package com.neobis.cookscorner.service;
 
-import com.neobis.cookscorner.dto.*;
+import com.neobis.cookscorner.dto.auth.*;
 import com.neobis.cookscorner.enums.UserRole;
 import com.neobis.cookscorner.exception.ResourceExistsException;
 import com.neobis.cookscorner.exception.ResourceNotFoundException;
@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         user.setFirstName(registerRequestDto.getFirstName());
         user.setLastName(registerRequestDto.getLastName());
-        user.setRole(UserRole.USER_ROLE);
+        user.setRole(UserRole.ROLE_USER);
 
         return modelMapper.map(userRepository.save(user), RegisterResponseDto.class);
     }
