@@ -1,0 +1,24 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          command_timeout: 200m
+          script: /
+            cd cookscorner-backend/
+            git pull
+            docker compose -f docker-compose.prod.yml up --build -d
