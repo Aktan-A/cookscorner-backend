@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -26,6 +29,14 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = new Category(categoryInDto.getName());
         return modelMapper.map(categoryRepository.save(category), CategoryOutDto.class);
+    }
+
+    @Override
+    public List<CategoryOutDto> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(category -> modelMapper.map(category, CategoryOutDto.class))
+                .collect(Collectors.toList());
     }
 
 }
