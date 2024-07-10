@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script_stop: true
           command_timeout: 200m
-          script: /
+          script: |
             cd cookscorner-backend/
             git pull
             docker compose -f docker-compose.prod.yml up --build -d
