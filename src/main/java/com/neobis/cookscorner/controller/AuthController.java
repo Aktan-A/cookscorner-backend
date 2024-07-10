@@ -42,7 +42,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequestDto));
     }
 
-    @Operation(summary = "Refreshes an access token", description = "Authenticates a user and returns an access token")
+    @Operation(
+            summary = "Refreshes an access token",
+            description = "Validates the provided refresh token and returns a refreshed access token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Access token successfully refreshed"),
             @ApiResponse(responseCode = "400", description = "Refresh token has expired"),
