@@ -1,15 +1,14 @@
 package com.neobis.cookscorner.service;
 
-import com.neobis.cookscorner.dto.LoginRequestDto;
-import com.neobis.cookscorner.dto.LoginResponseDto;
-import com.neobis.cookscorner.dto.RegisterRequestDto;
-import com.neobis.cookscorner.dto.RegisterResponseDto;
+import com.neobis.cookscorner.dto.*;
 import com.neobis.cookscorner.enums.UserRole;
 import com.neobis.cookscorner.exception.ResourceExistsException;
 import com.neobis.cookscorner.exception.ResourceNotFoundException;
+import com.neobis.cookscorner.model.RefreshToken;
 import com.neobis.cookscorner.model.User;
 import com.neobis.cookscorner.repository.UserRepository;
 import com.neobis.cookscorner.security.JwtService;
+import com.neobis.cookscorner.security.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
@@ -63,6 +63,18 @@ public class AuthServiceImpl implements AuthService {
 
         User userModel = user.get();
         String accessToken = jwtService.generateToken(userModel);
-        return LoginResponseDto.builder().accessToken(accessToken).build();
+        String refreshToken = refreshTokenService.createRefreshToken(userModel).getToken();
+        return LoginResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken).build();
     }
+
+    @Override
+    public RefreshAccessTokenResponseDto refreshAccessToken(RefreshAccessTokenRequestDto refreshAccessTokenRequestDto) {
+        RefreshToken refreshToken = refreshTokenService.validateRefreshTokenByToken(
+                refreshAccessTokenRequestDto.getRefreshToken());
+        String accessToken = jwtService.generateToken(refreshToken.getUser());
+        return RefreshAccessTokenResponseDto.builder().accessToken(accessToken).build();
+    }
+
 }

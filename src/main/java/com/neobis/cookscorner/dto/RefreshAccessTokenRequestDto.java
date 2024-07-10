@@ -1,17 +1,14 @@
 package com.neobis.cookscorner.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class LoginResponseDto {
+public class RefreshAccessTokenRequestDto {
 
-    private String accessToken;
     private String refreshToken;
 
 }

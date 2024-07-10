@@ -1,9 +1,6 @@
 package com.neobis.cookscorner.controller;
 
-import com.neobis.cookscorner.dto.LoginRequestDto;
-import com.neobis.cookscorner.dto.LoginResponseDto;
-import com.neobis.cookscorner.dto.RegisterRequestDto;
-import com.neobis.cookscorner.dto.RegisterResponseDto;
+import com.neobis.cookscorner.dto.*;
 import com.neobis.cookscorner.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +30,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(registerRequestDto));
     }
 
-    @Operation(summary = "Authenticates a user", description = "Authenticates a user and returns an access token")
+    @Operation(
+            summary = "Authenticates a user",
+            description = "Authenticates a user and returns an access token and a refresh token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully logged in"),
             @ApiResponse(responseCode = "404", description = "User with this email was not found")
@@ -41,6 +40,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(authService.login(loginRequestDto));
+    }
+
+    @Operation(summary = "Refreshes an access token", description = "Authenticates a user and returns an access token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Access token successfully refreshed"),
+            @ApiResponse(responseCode = "400", description = "Refresh token has expired"),
+            @ApiResponse(responseCode = "404", description = "Refresh token was not found")
+    })
+    @PostMapping("/refresh-token")
+    public ResponseEntity<RefreshAccessTokenResponseDto> refreshToken(
+            @RequestBody RefreshAccessTokenRequestDto refreshAccessTokenRequestDto) {
+        return ResponseEntity.ok(authService.refreshAccessToken(refreshAccessTokenRequestDto));
     }
 
 }
