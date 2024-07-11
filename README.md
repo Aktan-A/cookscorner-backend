@@ -19,6 +19,7 @@ Technologies
 - Lombok
 - JWT
 - Docker
+- Cloudinary
 
 ## Environment Variables
 | Key                          | Description                        |
@@ -29,4 +30,7 @@ Technologies
 | DB_PASSWORD                  | Database user password.            |
 | ACCESS_TOKEN_SECRET_KEY      | Secret for access tokens.          |
 | ACCESS_TOKEN_EXPIRE_MINUTES  | Access token lifetime in minutes.  |
-| REFRESH_TOKEN_EXPIRE_MINUTES | Refresh token lifetime in minutes. 
+| REFRESH_TOKEN_EXPIRE_MINUTES | Refresh token lifetime in minutes. |
+| CLOUDINARY_CLOUD_NAME        | Cloudinary cloud name.             |
+| CLOUDINARY_API_KEY           | Cloudinary api key.                |
+| CLOUDINARY_API_SECRET        | Cloudinary api secret.             |
