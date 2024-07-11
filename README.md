@@ -1,15 +1,23 @@
 # cookscorner-backend
 
-## Project Setup
+## CooksCorner ERD
+![alt cookscorner-erd](cookscorner-erd.png)
+
+## Running locally
+
+### With maven command line
 ```bash
 git clone git@github.com:Aktan-A/cookscorner-backend.git
-./mvnw clean spring-boot:run
+cd cookscorner-backend/
+./mvnw spring-boot:run
 ```
 
-## Running Docker-Compose
+### With docker compose
 ```bash
 docker compose -f docker-compose.dev.yml up --build -d
 ```
+
+Swagger ui url: http://localhost:8080/swagger-ui/index.html
 
 Technologies
 - Spring
