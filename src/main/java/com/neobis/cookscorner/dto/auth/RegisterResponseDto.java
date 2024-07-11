@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterResponseDto {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String email;
 }

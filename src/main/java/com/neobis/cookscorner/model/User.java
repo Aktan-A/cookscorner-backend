@@ -27,10 +27,7 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
+    private String name;
 
     @Column(nullable = false)
     private String password;
@@ -66,14 +63,12 @@ public class User extends BaseEntity implements UserDetails {
 
     public User(
             String email,
-            String firstName,
-            String lastName,
+            String name,
             String password,
             UserRole role,
             String bio) {
         this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.password = password;
         this.role = role;
         this.bio = bio;
@@ -119,11 +114,11 @@ public class User extends BaseEntity implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(password, user.password) && role == user.role && Objects.equals(bio, user.bio);
+        return Objects.equals(email, user.email) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && role == user.role && Objects.equals(bio, user.bio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, firstName, lastName, password, role, bio);
+        return Objects.hash(email, name, password, role, bio);
     }
 }

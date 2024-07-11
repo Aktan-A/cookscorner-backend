@@ -40,8 +40,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setEmail(registerRequestDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
-        user.setFirstName(registerRequestDto.getFirstName());
-        user.setLastName(registerRequestDto.getLastName());
+        user.setName(registerRequestDto.getName());
         user.setRole(UserRole.ROLE_USER);
 
         return modelMapper.map(userRepository.save(user), RegisterResponseDto.class);
