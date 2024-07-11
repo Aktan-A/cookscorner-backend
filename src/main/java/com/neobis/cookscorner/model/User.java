@@ -51,6 +51,19 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(mappedBy = "likedByUsers")
     private Set<Recipe> likedRecipes;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = @JoinColumn(name = "follower_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"follower_user_id", "following_user_id"})
+    )
+    private Set<User> following;
+
+    @ManyToMany(mappedBy = "following")
+    private Set<User> followers;
+
+
     public User(
             String email,
             String firstName,
