@@ -17,7 +17,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script_stop: true
-          command_timeout: 200m
           script: |
             cd cookscorner-backend/
             git pull

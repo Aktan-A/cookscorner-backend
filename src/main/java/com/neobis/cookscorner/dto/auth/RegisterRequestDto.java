@@ -11,11 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequestDto {
 
-    @NotEmpty(message = "First name is required")
-    private String firstName;
-
-    @NotEmpty(message = "Last name is required")
-    private String lastName;
+    @NotEmpty(message = "Name is required")
+    private String name;
 
     @NotEmpty(message = "Email is required")
     @Email(message = "Invalid email format", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")

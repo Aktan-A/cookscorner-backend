@@ -40,7 +40,8 @@ public class Recipe extends BaseEntity {
     @JoinTable(
             name = "recipe_categories",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+            inverseJoinColumns = @JoinColumn(name = "category_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "category_id"})
     )
     private Set<Category> categories;
 
@@ -48,7 +49,8 @@ public class Recipe extends BaseEntity {
     @JoinTable(
             name = "saved_recipes",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "user_id"})
     )
     private Set<User> savedByUsers;
 
@@ -56,7 +58,8 @@ public class Recipe extends BaseEntity {
     @JoinTable(
             name = "liked_recipes",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "user_id"})
     )
     private Set<User> likedByUsers;
 
