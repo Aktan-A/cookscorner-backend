@@ -63,6 +63,21 @@ public class Recipe extends BaseEntity {
     )
     private Set<User> likedByUsers;
 
+    @OneToMany(mappedBy = "recipe")
+    private Set<RecipeIngredient> ingredients;
+
+    public Recipe(
+            Integer preparationTime, String description, RecipeDifficulty difficulty, User author, Image image,
+            Set<Category> categories, Set<RecipeIngredient> ingredients) {
+        this.preparationTime = preparationTime;
+        this.description = description;
+        this.difficulty = difficulty;
+        this.author = author;
+        this.image = image;
+        this.categories = categories;
+        this.ingredients = ingredients;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
