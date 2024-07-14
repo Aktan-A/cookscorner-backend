@@ -48,4 +48,15 @@ public class RefreshTokenService {
         return refreshTokenModel;
     }
 
+    public void deleteRefreshTokenByToken(String token) {
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByToken(token);
+        if (refreshToken.isEmpty()) {
+            throw new ResourceNotFoundException("Refresh token not found.");
+        }
+
+        RefreshToken refreshTokenModel = refreshToken.get();
+
+        refreshTokenRepository.delete(refreshTokenModel);
+    }
+
 }
