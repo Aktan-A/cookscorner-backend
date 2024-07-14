@@ -67,7 +67,7 @@ public class ApplicationConfig {
     @Bean
     public Cloudinary cloudinary() {
         Cloudinary cloudinary = null;
-        Map config = new HashMap();
+        Map<String, Object> config = new HashMap();
         config.put("cloud_name", cloudinary_cloud_name);
         config.put("api_key", cloudinary_api_key);
         config.put("api_secret", cloudinary_api_secret);

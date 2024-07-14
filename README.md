@@ -28,6 +28,8 @@ Technologies
 - JWT
 - Docker
 - Cloudinary
+- JUnit 5
+- Mockito
 
 ## Environment Variables
 | Key                          | Description                        |

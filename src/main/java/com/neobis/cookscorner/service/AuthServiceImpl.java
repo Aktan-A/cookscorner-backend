@@ -76,4 +76,9 @@ public class AuthServiceImpl implements AuthService {
         return RefreshAccessTokenResponseDto.builder().accessToken(accessToken).build();
     }
 
+    @Override
+    public void logout(LogoutRequestDto logoutRequestDto) {
+        refreshTokenService.deleteRefreshTokenByToken(logoutRequestDto.getRefreshToken());
+    }
+
 }

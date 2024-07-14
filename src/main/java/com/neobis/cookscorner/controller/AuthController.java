@@ -56,4 +56,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshAccessToken(refreshAccessTokenRequestDto));
     }
 
+    @Operation(
+            summary = "Logs out the user",
+            description = "Invalidates the provided refresh token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully logged out"),
+            @ApiResponse(responseCode = "404", description = "Refresh token was not found")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @RequestBody @Valid LogoutRequestDto logoutRequestDto) {
+        authService.logout(logoutRequestDto);
+        return ResponseEntity.ok("User successfully logged out.");
+    }
+
 }
