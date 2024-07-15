@@ -9,10 +9,13 @@ import com.neobis.cookscorner.model.*;
 import com.neobis.cookscorner.repository.CategoryRepository;
 import com.neobis.cookscorner.repository.ImageRepository;
 import com.neobis.cookscorner.repository.RecipeRepository;
+import com.neobis.cookscorner.specification.RecipeSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +77,17 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeOutDto recipeOutDto = modelMapper.map(recipe, RecipeOutDto.class);
         recipeOutDto.setImageUrl(recipe.getImage().getImageUrl());
         return recipeOutDto;
+    }
+
+    @Override
+    public Page<RecipeOutDto> getRecipes(Long categoryId, String searchTerm, Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findAll(
+                RecipeSpecification.filterByCategoryAndSearch(categoryId, searchTerm), pageable);
+        return recipes.map(recipe -> {
+                    RecipeOutDto recipeOutDto = modelMapper.map(recipe, RecipeOutDto.class);
+                    recipeOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    return recipeOutDto;
+                });
     }
 
 }
