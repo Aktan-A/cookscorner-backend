@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,6 +19,9 @@ import java.util.Set;
 @ToString(exclude = {"author", "image"})
 public class Recipe extends BaseEntity {
 
+    @Column(nullable = false, unique = true)
+    private String name;
+
     @Column(name = "preparation_time", nullable = false)
     private Integer preparationTime;
 
@@ -28,22 +32,17 @@ public class Recipe extends BaseEntity {
     @Column(nullable = false)
     private RecipeDifficulty difficulty;
 
-    @OneToOne
-    @JoinColumn(name = "author_user_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_user_id")
     private User author;
 
-    @OneToOne
-    @JoinColumn(name = "image_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "image_id")
     private Image image;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "recipe_categories",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "category_id"})
-    )
-    private Set<Category> categories;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -52,7 +51,7 @@ public class Recipe extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "user_id"})
     )
-    private Set<User> savedByUsers;
+    private Set<User> savedByUsers = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -61,20 +60,21 @@ public class Recipe extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"recipe_id", "user_id"})
     )
-    private Set<User> likedByUsers;
+    private Set<User> likedByUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "recipe")
-    private Set<RecipeIngredient> ingredients;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.PERSIST)
+    private Set<RecipeIngredient> ingredients = new HashSet<>();
 
     public Recipe(
-            Integer preparationTime, String description, RecipeDifficulty difficulty, User author, Image image,
-            Set<Category> categories, Set<RecipeIngredient> ingredients) {
+            String name, Integer preparationTime, String description, RecipeDifficulty difficulty, User author,
+            Image image, Category category, Set<RecipeIngredient> ingredients) {
+        this.name = name;
         this.preparationTime = preparationTime;
         this.description = description;
         this.difficulty = difficulty;
         this.author = author;
         this.image = image;
-        this.categories = categories;
+        this.category = category;
         this.ingredients = ingredients;
     }
 
@@ -83,11 +83,17 @@ public class Recipe extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
-        return Objects.equals(preparationTime, recipe.preparationTime) && Objects.equals(description, recipe.description) && difficulty == recipe.difficulty;
+        return Objects.equals(name, recipe.name) && Objects.equals(preparationTime, recipe.preparationTime) && Objects.equals(description, recipe.description) && difficulty == recipe.difficulty && Objects.equals(author, recipe.author) && Objects.equals(image, recipe.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(preparationTime, description, difficulty);
+        return Objects.hash(name, preparationTime, description, difficulty, author, image);
     }
+
+    public void addRecipeIngredient(RecipeIngredient recipeIngredient) {
+        ingredients.add(recipeIngredient);
+        recipeIngredient.setRecipe(this);
+    }
+
 }

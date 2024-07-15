@@ -1,4 +1,4 @@
-package com.neobis.cookscorner.dto.cateogory;
+package com.neobis.cookscorner.dto.category;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package com.neobis.cookscorner.service;
 
-import com.neobis.cookscorner.dto.cateogory.CategoryInDto;
-import com.neobis.cookscorner.dto.cateogory.CategoryOutDto;
+import com.neobis.cookscorner.dto.category.CategoryInDto;
+import com.neobis.cookscorner.dto.category.CategoryOutDto;
 import com.neobis.cookscorner.exception.ResourceExistsException;
 import com.neobis.cookscorner.model.Category;
 import com.neobis.cookscorner.repository.CategoryRepository;

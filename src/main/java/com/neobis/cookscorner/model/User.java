@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -43,10 +40,10 @@ public class User extends BaseEntity implements UserDetails {
     private Image profileImage;
 
     @ManyToMany(mappedBy = "savedByUsers")
-    private Set<Recipe> savedRecipes;
+    private Set<Recipe> savedRecipes = new HashSet<>();
 
     @ManyToMany(mappedBy = "likedByUsers")
-    private Set<Recipe> likedRecipes;
+    private Set<Recipe> likedRecipes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -55,10 +52,10 @@ public class User extends BaseEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "following_user_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"follower_user_id", "following_user_id"})
     )
-    private Set<User> following;
+    private Set<User> following = new HashSet<>();
 
     @ManyToMany(mappedBy = "following")
-    private Set<User> followers;
+    private Set<User> followers = new HashSet<>();
 
 
     public User(
