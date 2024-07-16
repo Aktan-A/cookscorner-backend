@@ -84,12 +84,12 @@ public class RecipeServiceImpl implements RecipeService {
         Page<Recipe> recipes = recipeRepository.findAll(
                 RecipeSpecification.filterByCategoryAndSearch(categoryId, searchTerm), pageable);
         return recipes.map(recipe -> {
-                    RecipeOutDto recipeOutDto = modelMapper.map(recipe, RecipeOutDto.class);
-                    recipeOutDto.setImageUrl(recipe.getImage().getImageUrl());
-                    recipeOutDto.setAuthorName(recipe.getAuthor().getName());
-                    recipeOutDto.setLikesAmount(recipe.getLikedByUsers().size());
-                    recipeOutDto.setSavesAmount(recipe.getSavedByUsers().size());
-                    return recipeOutDto;
+                    RecipeOutDto dto = modelMapper.map(recipe, RecipeOutDto.class);
+                    dto.setImageUrl(recipe.getImage().getImageUrl());
+                    dto.setAuthorName(recipe.getAuthor().getName());
+                    dto.setLikesAmount(recipe.getLikedByUsers().size());
+                    dto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return dto;
                 });
     }
 
