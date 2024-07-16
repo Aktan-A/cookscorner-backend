@@ -4,6 +4,7 @@ import com.neobis.cookscorner.dto.recipeingredient.RecipeIngredientInDto;
 import com.neobis.cookscorner.enums.RecipeDifficulty;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class RecipeInDto {
 
     @NotEmpty(message = "Name is required")
+    @Size(max = 300, message = "Name must not be longer than 300 characters")
     private String name;
 
     @NotNull(message = "Preparation time is required")

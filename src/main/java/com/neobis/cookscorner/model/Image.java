@@ -18,10 +18,10 @@ import java.util.Objects;
 @ToString
 public class Image extends BaseEntity {
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url", nullable = false, length = 300)
     private String imageUrl;
 
-    @Column(name = "remote_id", nullable = false)
+    @Column(name = "remote_id", nullable = false, length = 200)
     private String remoteId;
 
     public Image(String imageUrl, String remoteId) {

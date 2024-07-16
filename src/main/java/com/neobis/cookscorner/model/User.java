@@ -20,19 +20,20 @@ import java.util.*;
 @ToString(exclude = {"profileImage", "savedRecipes"})
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 300)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String name;
 
     @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private UserRole role;
 
+    @Column(length = 300)
     private String bio;
 
     @OneToOne

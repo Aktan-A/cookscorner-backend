@@ -19,12 +19,13 @@ import java.util.Set;
 @ToString(exclude = {"author", "image"})
 public class Recipe extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 300)
     private String name;
 
     @Column(name = "preparation_time", nullable = false)
     private Integer preparationTime;
 
+    @Lob
     @Column(nullable = false)
     private String description;
 
