@@ -1,8 +1,11 @@
 package com.neobis.cookscorner.service;
 
+import com.neobis.cookscorner.dto.recipe.RecipeDetailsDto;
 import com.neobis.cookscorner.dto.recipe.RecipeInDto;
+import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.recipe.RecipeOutDto;
 import com.neobis.cookscorner.dto.recipeingredient.RecipeIngredientInDto;
+import com.neobis.cookscorner.exception.InvalidRequestException;
 import com.neobis.cookscorner.exception.ResourceExistsException;
 import com.neobis.cookscorner.exception.ResourceNotFoundException;
 import com.neobis.cookscorner.model.*;
@@ -80,17 +83,114 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Page<RecipeOutDto> getRecipes(Long categoryId, String searchTerm, Pageable pageable) {
+    public Page<RecipeListOutDto> getRecipes(Long categoryId, String searchTerm, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAll(
                 RecipeSpecification.filterByCategoryAndSearch(categoryId, searchTerm), pageable);
         return recipes.map(recipe -> {
-                    RecipeOutDto dto = modelMapper.map(recipe, RecipeOutDto.class);
+                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
                     dto.setImageUrl(recipe.getImage().getImageUrl());
                     dto.setAuthorName(recipe.getAuthor().getName());
                     dto.setLikesAmount(recipe.getLikedByUsers().size());
                     dto.setSavesAmount(recipe.getSavedByUsers().size());
                     return dto;
                 });
+    }
+
+    @Override
+    public RecipeDetailsDto getRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        RecipeDetailsDto dto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
+        dto.setImageUrl(recipeModel.getImage().getImageUrl());
+        dto.setAuthorName(recipeModel.getAuthor().getName());
+        dto.setLikesAmount(recipeModel.getLikedByUsers().size());
+        dto.setSavesAmount(recipeModel.getSavedByUsers().size());
+        dto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
+        dto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
+        return dto;
+    }
+
+    @Override
+    public void likeRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (recipeModel.getLikedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has already been liked.");
+        }
+
+        recipeModel.getLikedByUsers().add(user);
+        recipeRepository.save(recipeModel);
+    }
+
+    @Override
+    public void unlikeRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!recipeModel.getLikedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has not been liked.");
+        }
+
+        recipeModel.getLikedByUsers().remove(user);
+        recipeRepository.save(recipeModel);
+    }
+
+    @Override
+    public void saveRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (recipeModel.getSavedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has already been saved.");
+        }
+
+        recipeModel.getSavedByUsers().add(user);
+        recipeRepository.save(recipeModel);
+    }
+
+    @Override
+    public void unsaveRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!recipeModel.getSavedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has not been saved.");
+        }
+
+        recipeModel.getSavedByUsers().remove(user);
+        recipeRepository.save(recipeModel);
     }
 
 }
