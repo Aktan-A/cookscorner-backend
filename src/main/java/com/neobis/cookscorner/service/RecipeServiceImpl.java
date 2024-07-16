@@ -109,7 +109,6 @@ public class RecipeServiceImpl implements RecipeService {
 
         RecipeDetailsDto dto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
         dto.setImageUrl(recipeModel.getImage().getImageUrl());
-        dto.setAuthorName(recipeModel.getAuthor().getName());
         dto.setLikesAmount(recipeModel.getLikedByUsers().size());
         dto.setSavesAmount(recipeModel.getSavedByUsers().size());
         dto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));

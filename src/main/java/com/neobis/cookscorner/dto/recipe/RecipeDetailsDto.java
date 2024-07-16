@@ -2,6 +2,7 @@ package com.neobis.cookscorner.dto.recipe;
 
 import com.neobis.cookscorner.dto.category.CategoryOutDto;
 import com.neobis.cookscorner.dto.recipeingredient.RecipeIngredientOutDto;
+import com.neobis.cookscorner.dto.user.UserOutDto;
 import com.neobis.cookscorner.enums.RecipeDifficulty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,12 @@ public class RecipeDetailsDto {
     private Integer preparationTime;
     private String description;
     private RecipeDifficulty difficulty;
+    private UserOutDto author;
     private CategoryOutDto category;
     private List<RecipeIngredientOutDto> ingredients;
     private LocalDateTime createdAt;
 
     private String imageUrl;
-    private String authorName;
     private Integer likesAmount;
     private Integer savesAmount;
     private Boolean isLikedByUser;
