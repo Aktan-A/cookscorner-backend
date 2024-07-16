@@ -1,5 +1,6 @@
 package com.neobis.cookscorner.controller;
 
+import com.neobis.cookscorner.dto.recipe.RecipeDetailsDto;
 import com.neobis.cookscorner.dto.recipe.RecipeInDto;
 import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.recipe.RecipeOutDto;
@@ -54,7 +55,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
     })
     @GetMapping("/{recipeId}")
-    public ResponseEntity<RecipeOutDto> getRecipe(@PathVariable("recipeId") Long recipeId) {
+    public ResponseEntity<RecipeDetailsDto> getRecipe(@PathVariable("recipeId") Long recipeId) {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
     }
 

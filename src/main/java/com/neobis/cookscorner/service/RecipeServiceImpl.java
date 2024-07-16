@@ -1,5 +1,6 @@
 package com.neobis.cookscorner.service;
 
+import com.neobis.cookscorner.dto.recipe.RecipeDetailsDto;
 import com.neobis.cookscorner.dto.recipe.RecipeInDto;
 import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.recipe.RecipeOutDto;
@@ -96,7 +97,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeOutDto getRecipeById(Long recipeId) {
+    public RecipeDetailsDto getRecipeById(Long recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         if (recipe.isEmpty()) {
             throw new ResourceNotFoundException(
@@ -104,11 +105,15 @@ public class RecipeServiceImpl implements RecipeService {
             );
         }
         Recipe recipeModel = recipe.get();
-        RecipeOutDto dto = modelMapper.map(recipeModel, RecipeOutDto.class);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        RecipeDetailsDto dto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
         dto.setImageUrl(recipeModel.getImage().getImageUrl());
         dto.setAuthorName(recipeModel.getAuthor().getName());
         dto.setLikesAmount(recipeModel.getLikedByUsers().size());
         dto.setSavesAmount(recipeModel.getSavedByUsers().size());
+        dto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
+        dto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
         return dto;
     }
 

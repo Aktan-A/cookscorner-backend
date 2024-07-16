@@ -1,5 +1,6 @@
 package com.neobis.cookscorner.service;
 
+import com.neobis.cookscorner.dto.recipe.RecipeDetailsDto;
 import com.neobis.cookscorner.dto.recipe.RecipeInDto;
 import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.recipe.RecipeOutDto;
@@ -12,7 +13,7 @@ public interface RecipeService {
 
     Page<RecipeListOutDto> getRecipes(Long categoryId, String searchTerm, Pageable pageable);
 
-    RecipeOutDto getRecipeById(Long recipeId);
+    RecipeDetailsDto getRecipeById(Long recipeId);
 
     void likeRecipeById(Long recipeId);
 
