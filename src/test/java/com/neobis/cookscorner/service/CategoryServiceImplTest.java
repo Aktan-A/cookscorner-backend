@@ -42,7 +42,7 @@ class CategoryServiceImplTest {
     public void setUp() {
         categoryInDto = new CategoryInDto("Test category");
         category = new Category("Test category");
-        categoryOutDto = new CategoryOutDto(1L, "Test category", LocalDateTime.now());
+        categoryOutDto = new CategoryOutDto(1L, "Test category");
     }
 
     @Test
