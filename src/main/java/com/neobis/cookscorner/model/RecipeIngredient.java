@@ -17,7 +17,7 @@ import java.util.Objects;
 @ToString(exclude = {"recipe"})
 public class RecipeIngredient extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String name;
 
     @Column(nullable = false)
