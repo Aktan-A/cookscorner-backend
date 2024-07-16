@@ -86,6 +86,9 @@ public class RecipeServiceImpl implements RecipeService {
         return recipes.map(recipe -> {
                     RecipeOutDto recipeOutDto = modelMapper.map(recipe, RecipeOutDto.class);
                     recipeOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    recipeOutDto.setAuthorName(recipe.getAuthor().getName());
+                    recipeOutDto.setLikesAmount(recipe.getLikedByUsers().size());
+                    recipeOutDto.setSavesAmount(recipe.getSavedByUsers().size());
                     return recipeOutDto;
                 });
     }
