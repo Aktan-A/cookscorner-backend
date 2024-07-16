@@ -17,4 +17,8 @@ public interface RecipeService {
     void likeRecipeById(Long recipeId);
 
     void unlikeRecipeById(Long recipeId);
+
+    void saveRecipeById(Long recipeId);
+
+    void unsaveRecipeById(Long recipeId);
 }

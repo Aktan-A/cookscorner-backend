@@ -150,4 +150,42 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(recipeModel);
     }
 
+    @Override
+    public void saveRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (recipeModel.getSavedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has already been saved.");
+        }
+
+        recipeModel.getSavedByUsers().add(user);
+        recipeRepository.save(recipeModel);
+    }
+
+    @Override
+    public void unsaveRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!recipeModel.getSavedByUsers().contains(user)) {
+            throw new InvalidRequestException("Recipe has not been saved.");
+        }
+
+        recipeModel.getSavedByUsers().remove(user);
+        recipeRepository.save(recipeModel);
+    }
+
 }
