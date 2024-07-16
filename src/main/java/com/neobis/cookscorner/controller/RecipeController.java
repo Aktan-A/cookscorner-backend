@@ -45,4 +45,16 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipes(categoryId, searchTerm, pageable));
     }
 
+    @Operation(
+            summary = "Get recipe details by id",
+            description = "Returns a recipe details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recipe details successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
+    })
+    @GetMapping("/{recipeId}")
+    public ResponseEntity<RecipeOutDto> getRecipe(@PathVariable("recipeId") Long recipeId) {
+        return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
+    }
+
 }

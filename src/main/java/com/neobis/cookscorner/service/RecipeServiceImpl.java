@@ -93,4 +93,21 @@ public class RecipeServiceImpl implements RecipeService {
                 });
     }
 
+    @Override
+    public RecipeOutDto getRecipeById(Long recipeId) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        if (recipe.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("Recipe with id %s was not found.", recipeId)
+            );
+        }
+        Recipe recipeModel = recipe.get();
+        RecipeOutDto dto = modelMapper.map(recipeModel, RecipeOutDto.class);
+        dto.setImageUrl(recipeModel.getImage().getImageUrl());
+        dto.setAuthorName(recipeModel.getAuthor().getName());
+        dto.setLikesAmount(recipeModel.getLikedByUsers().size());
+        dto.setSavesAmount(recipeModel.getSavedByUsers().size());
+        return dto;
+    }
+
 }

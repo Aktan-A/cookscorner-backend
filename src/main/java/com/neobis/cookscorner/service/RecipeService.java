@@ -10,4 +10,6 @@ public interface RecipeService {
     RecipeOutDto createRecipe(RecipeInDto recipeInDto);
 
     Page<RecipeOutDto> getRecipes(Long categoryId, String searchTerm, Pageable pageable);
+
+    RecipeOutDto getRecipeById(Long recipeId);
 }
