@@ -14,4 +14,6 @@ public interface UserService {
 
     Page<RecipeListOutDto> getCurrentUserRecipes(Pageable pageable);
 
+    Page<RecipeListOutDto> getCurrentUserSavedRecipes(Pageable pageable);
+
 }

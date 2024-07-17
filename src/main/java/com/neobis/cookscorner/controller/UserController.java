@@ -62,4 +62,17 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUserRecipes(pageable));
     }
 
+    @Operation(
+            summary = "Get logged-in user saved recipes",
+            description = "Returns a list of logged-in user saved recipes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User saved recipes successfully retrieved")
+    })
+    @GetMapping("/me/recipes/saved")
+    public ResponseEntity<Page<RecipeListOutDto>> getCurrentUserSavedRecipes(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getCurrentUserSavedRecipes(pageable));
+    }
+
 }

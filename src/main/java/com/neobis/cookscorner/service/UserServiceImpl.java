@@ -81,4 +81,21 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    @Transactional
+    public Page<RecipeListOutDto> getCurrentUserSavedRecipes(Pageable pageable) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Page<Recipe> recipes = recipeRepository.findSavedRecipesByUserId(currentUser.getId(), pageable);
+        return recipes.map(
+                recipe -> {
+                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
+                    dto.setImageUrl(recipe.getImage().getImageUrl());
+                    dto.setAuthorName(recipe.getAuthor().getName());
+                    dto.setLikesAmount(recipe.getLikedByUsers().size());
+                    dto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return dto;
+                }
+        );
+    }
+
 }
