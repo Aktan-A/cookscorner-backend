@@ -46,6 +46,9 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(mappedBy = "likedByUsers")
     private Set<Recipe> likedRecipes = new HashSet<>();
 
+    @OneToMany(mappedBy = "author")
+    private Set<Recipe> recipes = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_follows",
