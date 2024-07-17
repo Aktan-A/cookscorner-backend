@@ -1,5 +1,6 @@
 package com.neobis.cookscorner.controller;
 
+import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.user.UserListOutDto;
 import com.neobis.cookscorner.dto.user.UserProfileOutDto;
 import com.neobis.cookscorner.service.UserService;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Get logged in user profile",
+            summary = "Get logged-in user profile",
             description = "Returns logged in user profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User profile successfully retrieved"),
@@ -46,6 +47,19 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserProfileOutDto> getCurrentUser() {
         return ResponseEntity.ok(userService.getCurrentUserProfile());
+    }
+
+    @Operation(
+            summary = "Get logged-in user recipes",
+            description = "Returns a list of logged-in user recipes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User recipes successfully retrieved")
+    })
+    @GetMapping("/me/recipes")
+    public ResponseEntity<Page<RecipeListOutDto>> getCurrentUserRecipes(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getCurrentUserRecipes(pageable));
     }
 
 }
