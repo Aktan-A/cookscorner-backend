@@ -150,4 +150,26 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
+    @Override
+    @Transactional
+    public UserProfileOutDto getUserProfileById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("User with id %s was not found.", id)
+            );
+        }
+
+        User userModel = user.get();
+        UserProfileOutDto dto = modelMapper.map(userModel, UserProfileOutDto.class);
+        if (userModel.getProfileImage() != null) {
+            dto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
+        }
+        dto.setRecipeCount(userModel.getRecipes().size());
+        dto.setFollowerCount(userModel.getFollowers().size());
+        dto.setFollowingCount(userModel.getFollowing().size());
+        return dto;
+    }
+
 }

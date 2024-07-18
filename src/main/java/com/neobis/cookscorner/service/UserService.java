@@ -22,4 +22,6 @@ public interface UserService {
 
     UserProfileUpdateOutDto updateUserProfile(UserProfileUpdateInDto userProfileUpdateInDto) throws IOException;
 
+    UserProfileOutDto getUserProfileById(Long id);
+
 }

@@ -84,9 +84,21 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User or image was not found")
     })
     @PatchMapping("/me")
-    public ResponseEntity<UserProfileUpdateOutDto> getCurrentUser(
+    public ResponseEntity<UserProfileUpdateOutDto> updateCurrentUserProfile(
             @RequestBody UserProfileUpdateInDto userProfileUpdateInDto) throws IOException {
         return ResponseEntity.ok(userService.updateUserProfile(userProfileUpdateInDto));
+    }
+
+    @Operation(
+            summary = "Get user profile by id",
+            description = "Returns user profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User profile successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "User was not found")
+    })
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserProfileOutDto> getUserById(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(userService.getUserProfileById(userId));
     }
 
 }
