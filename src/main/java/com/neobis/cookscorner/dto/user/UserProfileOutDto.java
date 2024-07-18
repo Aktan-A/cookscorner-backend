@@ -17,6 +17,7 @@ public class UserProfileOutDto {
     private Integer recipeCount;
     private Integer followerCount;
     private Integer followingCount;
+    private Boolean isFollowed;
 
 
 }

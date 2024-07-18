@@ -101,4 +101,32 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserProfileById(userId));
     }
 
+    @Operation(
+            summary = "Follow user by id",
+            description = "Follows a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully followed"),
+            @ApiResponse(responseCode = "400", description = "User is already followed"),
+            @ApiResponse(responseCode = "404", description = "User was not found")
+    })
+    @PostMapping("/{userId}/follow")
+    public ResponseEntity<String> followUserById(@PathVariable("userId") Long followedUserId) {
+        userService.followUserById(followedUserId);
+        return ResponseEntity.ok("User successfully followed.");
+    }
+
+    @Operation(
+            summary = "Unfollow user by id",
+            description = "Unfollows a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully unfollowed"),
+            @ApiResponse(responseCode = "400", description = "User is already unfollowed"),
+            @ApiResponse(responseCode = "404", description = "User was not found")
+    })
+    @PostMapping("/{userId}/unfollow")
+    public ResponseEntity<String> unfollowUserById(@PathVariable("userId") Long unfollowedUserId) {
+        userService.unfollowUserById(unfollowedUserId);
+        return ResponseEntity.ok("User successfully unfollowed.");
+    }
+
 }
