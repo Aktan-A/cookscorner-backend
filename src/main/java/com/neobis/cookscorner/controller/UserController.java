@@ -3,6 +3,8 @@ package com.neobis.cookscorner.controller;
 import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.user.UserListOutDto;
 import com.neobis.cookscorner.dto.user.UserProfileOutDto;
+import com.neobis.cookscorner.dto.user.UserProfileUpdateInDto;
+import com.neobis.cookscorner.dto.user.UserProfileUpdateOutDto;
 import com.neobis.cookscorner.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,10 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -73,6 +74,19 @@ public class UserController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(userService.getCurrentUserSavedRecipes(pageable));
+    }
+
+    @Operation(
+            summary = "Update user profile",
+            description = "Returns updated user profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User profile successfully updated"),
+            @ApiResponse(responseCode = "404", description = "User or image was not found")
+    })
+    @PatchMapping("/me")
+    public ResponseEntity<UserProfileUpdateOutDto> getCurrentUser(
+            @RequestBody UserProfileUpdateInDto userProfileUpdateInDto) throws IOException {
+        return ResponseEntity.ok(userService.updateUserProfile(userProfileUpdateInDto));
     }
 
 }

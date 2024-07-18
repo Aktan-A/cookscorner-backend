@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService {
         }
 
         Image imageModel = image.get();
-        cloudinaryService.delete(imageModel.getRemoteId());
         imageRepository.delete(imageModel);
+        cloudinaryService.delete(imageModel.getRemoteId());
     }
 }
