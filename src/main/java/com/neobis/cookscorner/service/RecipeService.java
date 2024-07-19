@@ -15,11 +15,8 @@ public interface RecipeService {
 
     RecipeDetailsDto getRecipeById(Long recipeId);
 
-    void likeRecipeById(Long recipeId);
+    String likeOrUnlikeRecipeById(Long recipeId);
 
-    void unlikeRecipeById(Long recipeId);
+    String saveOrUnsaveRecipeById(Long recipeId);
 
-    void saveRecipeById(Long recipeId);
-
-    void unsaveRecipeById(Long recipeId);
 }

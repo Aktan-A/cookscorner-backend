@@ -24,8 +24,6 @@ public interface UserService {
 
     UserProfileOutDto getUserProfileById(Long id);
 
-    void followUserById(Long followedUserId);
-
-    void unfollowUserById(Long unfollowedUserId);
+    String followOrUnfollowUserById(Long followedUserId);
 
 }

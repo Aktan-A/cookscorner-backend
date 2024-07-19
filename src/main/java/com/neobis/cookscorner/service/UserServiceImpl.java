@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void followUserById(Long followedUserId) {
+    public String followOrUnfollowUserById(Long followedUserId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> currentUser = userRepository.findById(user.getId());
 
@@ -201,50 +201,18 @@ public class UserServiceImpl implements UserService {
         }
 
         User followedUserModel = followedUser.get();
-
+        String resultText;
         if (followedUserModel.getFollowers().contains(currentUserModel)) {
-            throw new InvalidRequestException("User is already followed.");
+            followedUserModel.getFollowers().remove(currentUserModel);
+            currentUserModel.getFollowing().remove(followedUserModel);
+            resultText = "User successfully unfollowed.";
+        } else {
+            followedUserModel.getFollowers().add(currentUserModel);
+            currentUserModel.getFollowing().add(followedUserModel);
+            resultText = "User successfully followed.";
         }
-
-        followedUserModel.getFollowers().add(currentUserModel);
-        currentUserModel.getFollowing().add(followedUserModel);
         userRepository.save(currentUserModel);
-    }
-
-    @Override
-    public void unfollowUserById(Long unfollowedUserId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> currentUser = userRepository.findById(user.getId());
-
-        if (currentUser.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("User with id %s was not found.", user.getId())
-            );
-        }
-
-        User currentUserModel = currentUser.get();
-
-        if (user.getId().equals(unfollowedUserId)) {
-            throw new InvalidRequestException("User cannot unfollow themself.");
-        }
-
-        Optional<User> unfollowedUser = userRepository.findById(unfollowedUserId);
-
-        if (unfollowedUser.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("User with id %s was not found.", unfollowedUserId)
-            );
-        }
-
-        User unfollowedUserModel = unfollowedUser.get();
-
-        if (!unfollowedUserModel.getFollowers().contains(currentUserModel)) {
-            throw new InvalidRequestException("User is already unfollowed.");
-        }
-
-        unfollowedUserModel.getFollowers().remove(currentUserModel);
-        currentUserModel.getFollowing().remove(unfollowedUserModel);
-        userRepository.save(currentUserModel);
+        return resultText;
     }
 
 }
