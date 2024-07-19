@@ -5,6 +5,7 @@ import com.neobis.cookscorner.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("api/v1/images")
 @RequiredArgsConstructor
+@Tag(name = "Image Controller", description = "Controller for working with images")
 public class ImageController {
 
     private final ImageService imageService;

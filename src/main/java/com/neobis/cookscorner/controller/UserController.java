@@ -9,6 +9,7 @@ import com.neobis.cookscorner.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("api/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "User Controller", description = "Controller for working with users")
 public class UserController {
 
     private final UserService userService;
