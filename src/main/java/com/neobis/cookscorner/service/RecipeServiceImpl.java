@@ -87,12 +87,12 @@ public class RecipeServiceImpl implements RecipeService {
         Page<Recipe> recipes = recipeRepository.findAll(
                 RecipeSpecification.filterByCategoryAndSearch(categoryId, searchTerm), pageable);
         return recipes.map(recipe -> {
-                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
-                    dto.setImageUrl(recipe.getImage().getImageUrl());
-                    dto.setAuthorName(recipe.getAuthor().getName());
-                    dto.setLikesAmount(recipe.getLikedByUsers().size());
-                    dto.setSavesAmount(recipe.getSavedByUsers().size());
-                    return dto;
+                    RecipeListOutDto recipeListOutDto = modelMapper.map(recipe, RecipeListOutDto.class);
+                    recipeListOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    recipeListOutDto.setAuthorName(recipe.getAuthor().getName());
+                    recipeListOutDto.setLikesAmount(recipe.getLikedByUsers().size());
+                    recipeListOutDto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return recipeListOutDto;
                 });
     }
 
@@ -107,13 +107,13 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeModel = recipe.get();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        RecipeDetailsDto dto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
-        dto.setImageUrl(recipeModel.getImage().getImageUrl());
-        dto.setLikesAmount(recipeModel.getLikedByUsers().size());
-        dto.setSavesAmount(recipeModel.getSavedByUsers().size());
-        dto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
-        dto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
-        return dto;
+        RecipeDetailsDto recipeDetailsDto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
+        recipeDetailsDto.setImageUrl(recipeModel.getImage().getImageUrl());
+        recipeDetailsDto.setLikesAmount(recipeModel.getLikedByUsers().size());
+        recipeDetailsDto.setSavesAmount(recipeModel.getSavedByUsers().size());
+        recipeDetailsDto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
+        recipeDetailsDto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
+        return recipeDetailsDto;
     }
 
     @Override
