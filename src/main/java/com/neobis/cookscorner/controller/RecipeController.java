@@ -8,6 +8,7 @@ import com.neobis.cookscorner.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/recipes")
 @RequiredArgsConstructor
+@Tag(name = "Recipe Controller", description = "Controller for working with recipes")
 public class RecipeController {
 
     private final RecipeService recipeService;
@@ -59,48 +61,28 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipeById(recipeId));
     }
 
-    @Operation(summary = "Like a recipe", description = "Likes a recipe")
+    @Operation(
+            summary = "Like or unlike a recipe",
+            description = "Likes a recipe or removes a like if it was already liked")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipe successfully liked"),
+            @ApiResponse(responseCode = "200", description = "Recipe successfully liked or unliked"),
             @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
     })
     @PostMapping("/{recipeId}/like")
     public ResponseEntity<String> likeRecipe(@PathVariable("recipeId") Long recipeId) {
-        recipeService.likeRecipeById(recipeId);
-        return ResponseEntity.ok("Recipe successfully liked.");
+        return ResponseEntity.ok(recipeService.likeOrUnlikeRecipeById(recipeId));
     }
 
-    @Operation(summary = "Unlike a recipe", description = "Removes like from the recipe")
+    @Operation(
+            summary = "Save or unsave a recipe",
+            description = "Saves a recipe or unsaves it if it was already saved")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipe successfully unliked"),
-            @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
-    })
-    @PostMapping("/{recipeId}/unlike")
-    public ResponseEntity<String> unlikeRecipe(@PathVariable("recipeId") Long recipeId) {
-        recipeService.unlikeRecipeById(recipeId);
-        return ResponseEntity.ok("Recipe successfully unliked.");
-    }
-
-    @Operation(summary = "Save a recipe", description = "Saves a recipe")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipe successfully saved"),
+            @ApiResponse(responseCode = "200", description = "Recipe successfully saved or unsaved"),
             @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
     })
     @PostMapping("/{recipeId}/save")
     public ResponseEntity<String> saveRecipe(@PathVariable("recipeId") Long recipeId) {
-        recipeService.saveRecipeById(recipeId);
-        return ResponseEntity.ok("Recipe successfully saved.");
-    }
-
-    @Operation(summary = "Unsave a recipe", description = "Removes recipe from saved recipes")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipe successfully unsaved"),
-            @ApiResponse(responseCode = "404", description = "Recipe with provided id was not found")
-    })
-    @PostMapping("/{recipeId}/unsave")
-    public ResponseEntity<String> unsaveRecipe(@PathVariable("recipeId") Long recipeId) {
-        recipeService.unsaveRecipeById(recipeId);
-        return ResponseEntity.ok("Recipe successfully unsaved.");
+        return ResponseEntity.ok(recipeService.saveOrUnsaveRecipeById(recipeId));
     }
 
 }

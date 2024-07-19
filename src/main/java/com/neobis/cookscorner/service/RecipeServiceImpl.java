@@ -87,12 +87,12 @@ public class RecipeServiceImpl implements RecipeService {
         Page<Recipe> recipes = recipeRepository.findAll(
                 RecipeSpecification.filterByCategoryAndSearch(categoryId, searchTerm), pageable);
         return recipes.map(recipe -> {
-                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
-                    dto.setImageUrl(recipe.getImage().getImageUrl());
-                    dto.setAuthorName(recipe.getAuthor().getName());
-                    dto.setLikesAmount(recipe.getLikedByUsers().size());
-                    dto.setSavesAmount(recipe.getSavedByUsers().size());
-                    return dto;
+                    RecipeListOutDto recipeListOutDto = modelMapper.map(recipe, RecipeListOutDto.class);
+                    recipeListOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    recipeListOutDto.setAuthorName(recipe.getAuthor().getName());
+                    recipeListOutDto.setLikesAmount(recipe.getLikedByUsers().size());
+                    recipeListOutDto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return recipeListOutDto;
                 });
     }
 
@@ -107,17 +107,17 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeModel = recipe.get();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        RecipeDetailsDto dto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
-        dto.setImageUrl(recipeModel.getImage().getImageUrl());
-        dto.setLikesAmount(recipeModel.getLikedByUsers().size());
-        dto.setSavesAmount(recipeModel.getSavedByUsers().size());
-        dto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
-        dto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
-        return dto;
+        RecipeDetailsDto recipeDetailsDto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
+        recipeDetailsDto.setImageUrl(recipeModel.getImage().getImageUrl());
+        recipeDetailsDto.setLikesAmount(recipeModel.getLikedByUsers().size());
+        recipeDetailsDto.setSavesAmount(recipeModel.getSavedByUsers().size());
+        recipeDetailsDto.setIsLikedByUser(recipeModel.getLikedByUsers().contains(user));
+        recipeDetailsDto.setIsSavedByUser(recipeModel.getSavedByUsers().contains(user));
+        return recipeDetailsDto;
     }
 
     @Override
-    public void likeRecipeById(Long recipeId) {
+    public String likeOrUnlikeRecipeById(Long recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         if (recipe.isEmpty()) {
             throw new ResourceNotFoundException(
@@ -127,16 +127,20 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeModel = recipe.get();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        String resultText;
         if (recipeModel.getLikedByUsers().contains(user)) {
-            throw new InvalidRequestException("Recipe has already been liked.");
+            recipeModel.getLikedByUsers().remove(user);
+            resultText = "Recipe successfully unliked.";
+        } else {
+            recipeModel.getLikedByUsers().add(user);
+            resultText = "Recipe successfully liked.";
         }
-
-        recipeModel.getLikedByUsers().add(user);
         recipeRepository.save(recipeModel);
+        return resultText;
     }
 
     @Override
-    public void unlikeRecipeById(Long recipeId) {
+    public String saveOrUnsaveRecipeById(Long recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         if (recipe.isEmpty()) {
             throw new ResourceNotFoundException(
@@ -146,50 +150,16 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeModel = recipe.get();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!recipeModel.getLikedByUsers().contains(user)) {
-            throw new InvalidRequestException("Recipe has not been liked.");
-        }
-
-        recipeModel.getLikedByUsers().remove(user);
-        recipeRepository.save(recipeModel);
-    }
-
-    @Override
-    public void saveRecipeById(Long recipeId) {
-        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
-        if (recipe.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("Recipe with id %s was not found.", recipeId)
-            );
-        }
-        Recipe recipeModel = recipe.get();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        String resultText;
         if (recipeModel.getSavedByUsers().contains(user)) {
-            throw new InvalidRequestException("Recipe has already been saved.");
+            recipeModel.getSavedByUsers().remove(user);
+            resultText = "Recipe successfully unsaved.";
+        } else {
+            recipeModel.getSavedByUsers().add(user);
+            resultText = "Recipe successfully saved.";
         }
-
-        recipeModel.getSavedByUsers().add(user);
         recipeRepository.save(recipeModel);
-    }
-
-    @Override
-    public void unsaveRecipeById(Long recipeId) {
-        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
-        if (recipe.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("Recipe with id %s was not found.", recipeId)
-            );
-        }
-        Recipe recipeModel = recipe.get();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (!recipeModel.getSavedByUsers().contains(user)) {
-            throw new InvalidRequestException("Recipe has not been saved.");
-        }
-
-        recipeModel.getSavedByUsers().remove(user);
-        recipeRepository.save(recipeModel);
+        return resultText;
     }
 
 }

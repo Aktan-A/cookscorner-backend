@@ -40,12 +40,12 @@ public class UserServiceImpl implements UserService {
         Page<User> users = userRepository.findAll(
                 UserSpecification.filterBySearchTerm(searchTerm), pageable);
         return users.map(user -> {
-            UserListOutDto dto = new UserListOutDto();
-            dto.setName(user.getName());
+            UserListOutDto userListOutDto = new UserListOutDto();
+            userListOutDto.setName(user.getName());
             if (user.getProfileImage() != null) {
-                dto.setProfileImageUrl(user.getProfileImage().getImageUrl());
+                userListOutDto.setProfileImageUrl(user.getProfileImage().getImageUrl());
             }
-            return dto;
+            return userListOutDto;
         });
     }
 
@@ -62,14 +62,14 @@ public class UserServiceImpl implements UserService {
         }
 
         User userModel = user.get();
-        UserProfileOutDto dto = modelMapper.map(userModel, UserProfileOutDto.class);
+        UserProfileOutDto userProfileOutDto = modelMapper.map(userModel, UserProfileOutDto.class);
         if (userModel.getProfileImage() != null) {
-            dto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
+            userProfileOutDto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
         }
-        dto.setRecipeCount(userModel.getRecipes().size());
-        dto.setFollowerCount(userModel.getFollowers().size());
-        dto.setFollowingCount(userModel.getFollowing().size());
-        return dto;
+        userProfileOutDto.setRecipeCount(userModel.getRecipes().size());
+        userProfileOutDto.setFollowerCount(userModel.getFollowers().size());
+        userProfileOutDto.setFollowingCount(userModel.getFollowing().size());
+        return userProfileOutDto;
     }
 
     @Override
@@ -79,12 +79,12 @@ public class UserServiceImpl implements UserService {
         Page<Recipe> recipes = recipeRepository.findAllByAuthor(currentUser, pageable);
         return recipes.map(
                 recipe -> {
-                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
-                    dto.setImageUrl(recipe.getImage().getImageUrl());
-                    dto.setAuthorName(recipe.getAuthor().getName());
-                    dto.setLikesAmount(recipe.getLikedByUsers().size());
-                    dto.setSavesAmount(recipe.getSavedByUsers().size());
-                    return dto;
+                    RecipeListOutDto recipeListOutDto = modelMapper.map(recipe, RecipeListOutDto.class);
+                    recipeListOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    recipeListOutDto.setAuthorName(recipe.getAuthor().getName());
+                    recipeListOutDto.setLikesAmount(recipe.getLikedByUsers().size());
+                    recipeListOutDto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return recipeListOutDto;
                 }
         );
     }
@@ -96,12 +96,12 @@ public class UserServiceImpl implements UserService {
         Page<Recipe> recipes = recipeRepository.findSavedRecipesByUserId(currentUser.getId(), pageable);
         return recipes.map(
                 recipe -> {
-                    RecipeListOutDto dto = modelMapper.map(recipe, RecipeListOutDto.class);
-                    dto.setImageUrl(recipe.getImage().getImageUrl());
-                    dto.setAuthorName(recipe.getAuthor().getName());
-                    dto.setLikesAmount(recipe.getLikedByUsers().size());
-                    dto.setSavesAmount(recipe.getSavedByUsers().size());
-                    return dto;
+                    RecipeListOutDto recipeListOutDto = modelMapper.map(recipe, RecipeListOutDto.class);
+                    recipeListOutDto.setImageUrl(recipe.getImage().getImageUrl());
+                    recipeListOutDto.setAuthorName(recipe.getAuthor().getName());
+                    recipeListOutDto.setLikesAmount(recipe.getLikedByUsers().size());
+                    recipeListOutDto.setSavesAmount(recipe.getSavedByUsers().size());
+                    return recipeListOutDto;
                 }
         );
     }
@@ -144,11 +144,12 @@ public class UserServiceImpl implements UserService {
             userModel.setBio(userProfileUpdateInDto.getBio());
         }
 
-        UserProfileUpdateOutDto dto = modelMapper.map(userRepository.save(userModel), UserProfileUpdateOutDto.class);
+        UserProfileUpdateOutDto userProfileUpdateOutDto = modelMapper.map(
+                userRepository.save(userModel), UserProfileUpdateOutDto.class);
         if (userModel.getProfileImage() != null) {
-            dto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
+            userProfileUpdateOutDto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
         }
-        return dto;
+        return userProfileUpdateOutDto;
     }
 
     @Override
@@ -164,19 +165,19 @@ public class UserServiceImpl implements UserService {
         }
 
         User userModel = user.get();
-        UserProfileOutDto dto = modelMapper.map(userModel, UserProfileOutDto.class);
+        UserProfileOutDto userProfileOutDto = modelMapper.map(userModel, UserProfileOutDto.class);
         if (userModel.getProfileImage() != null) {
-            dto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
+            userProfileOutDto.setProfileImageUrl(userModel.getProfileImage().getImageUrl());
         }
-        dto.setRecipeCount(userModel.getRecipes().size());
-        dto.setFollowerCount(userModel.getFollowers().size());
-        dto.setFollowingCount(userModel.getFollowing().size());
-        dto.setIsFollowed(userModel.getFollowers().contains(currentUser));
-        return dto;
+        userProfileOutDto.setRecipeCount(userModel.getRecipes().size());
+        userProfileOutDto.setFollowerCount(userModel.getFollowers().size());
+        userProfileOutDto.setFollowingCount(userModel.getFollowing().size());
+        userProfileOutDto.setIsFollowed(userModel.getFollowers().contains(currentUser));
+        return userProfileOutDto;
     }
 
     @Override
-    public void followUserById(Long followedUserId) {
+    public String followOrUnfollowUserById(Long followedUserId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> currentUser = userRepository.findById(user.getId());
 
@@ -201,50 +202,18 @@ public class UserServiceImpl implements UserService {
         }
 
         User followedUserModel = followedUser.get();
-
+        String resultText;
         if (followedUserModel.getFollowers().contains(currentUserModel)) {
-            throw new InvalidRequestException("User is already followed.");
+            followedUserModel.getFollowers().remove(currentUserModel);
+            currentUserModel.getFollowing().remove(followedUserModel);
+            resultText = "User successfully unfollowed.";
+        } else {
+            followedUserModel.getFollowers().add(currentUserModel);
+            currentUserModel.getFollowing().add(followedUserModel);
+            resultText = "User successfully followed.";
         }
-
-        followedUserModel.getFollowers().add(currentUserModel);
-        currentUserModel.getFollowing().add(followedUserModel);
         userRepository.save(currentUserModel);
-    }
-
-    @Override
-    public void unfollowUserById(Long unfollowedUserId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> currentUser = userRepository.findById(user.getId());
-
-        if (currentUser.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("User with id %s was not found.", user.getId())
-            );
-        }
-
-        User currentUserModel = currentUser.get();
-
-        if (user.getId().equals(unfollowedUserId)) {
-            throw new InvalidRequestException("User cannot unfollow themself.");
-        }
-
-        Optional<User> unfollowedUser = userRepository.findById(unfollowedUserId);
-
-        if (unfollowedUser.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("User with id %s was not found.", unfollowedUserId)
-            );
-        }
-
-        User unfollowedUserModel = unfollowedUser.get();
-
-        if (!unfollowedUserModel.getFollowers().contains(currentUserModel)) {
-            throw new InvalidRequestException("User is already unfollowed.");
-        }
-
-        unfollowedUserModel.getFollowers().remove(currentUserModel);
-        currentUserModel.getFollowing().remove(unfollowedUserModel);
-        userRepository.save(currentUserModel);
+        return resultText;
     }
 
 }
