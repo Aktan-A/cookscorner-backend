@@ -20,7 +20,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    void existsByName_shouldReturnTrue() {
+    void existsByName_ShouldReturnTrue() {
         String categoryName = "Test category";
         Category category = new Category(categoryName);
         categoryRepository.save(category);
@@ -31,7 +31,7 @@ class CategoryRepositoryTest {
     }
 
     @Test
-    void existsByName_shouldReturnFalse() {
+    void existsByName_ShouldReturnFalse() {
         String categoryName = "Test category";
 
         Boolean exists = categoryRepository.existsByName(categoryName);

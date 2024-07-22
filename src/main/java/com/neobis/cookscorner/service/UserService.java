@@ -5,6 +5,7 @@ import com.neobis.cookscorner.dto.user.UserListOutDto;
 import com.neobis.cookscorner.dto.user.UserProfileOutDto;
 import com.neobis.cookscorner.dto.user.UserProfileUpdateInDto;
 import com.neobis.cookscorner.dto.user.UserProfileUpdateOutDto;
+import com.neobis.cookscorner.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,5 +26,7 @@ public interface UserService {
     UserProfileOutDto getUserProfileById(Long id);
 
     String followOrUnfollowUserById(Long followedUserId);
+
+    User getCurrentUser();
 
 }
