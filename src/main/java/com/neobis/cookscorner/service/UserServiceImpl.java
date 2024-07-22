@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserProfileOutDto getCurrentUserProfile() {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Optional<User> user = userRepository.findById(currentUser.getId());
 
         if (user.isEmpty()) {
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Page<RecipeListOutDto> getCurrentUserRecipes(Pageable pageable) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Page<Recipe> recipes = recipeRepository.findAllByAuthor(currentUser, pageable);
         return recipes.map(
                 recipe -> {
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Page<RecipeListOutDto> getCurrentUserSavedRecipes(Pageable pageable) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Page<Recipe> recipes = recipeRepository.findSavedRecipesByUserId(currentUser.getId(), pageable);
         return recipes.map(
                 recipe -> {
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserProfileUpdateOutDto updateUserProfile(
             UserProfileUpdateInDto userProfileUpdateInDto) throws IOException {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Optional<User> user = userRepository.findById(currentUser.getId());
 
         if (user.isEmpty()) {
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserProfileOutDto getUserProfileById(Long id) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String followOrUnfollowUserById(Long followedUserId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getCurrentUser();
         Optional<User> currentUser = userRepository.findById(user.getId());
 
         if (currentUser.isEmpty()) {
@@ -214,6 +214,11 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(currentUserModel);
         return resultText;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

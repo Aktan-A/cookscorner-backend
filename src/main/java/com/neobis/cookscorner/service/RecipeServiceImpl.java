@@ -5,7 +5,6 @@ import com.neobis.cookscorner.dto.recipe.RecipeInDto;
 import com.neobis.cookscorner.dto.recipe.RecipeListOutDto;
 import com.neobis.cookscorner.dto.recipe.RecipeOutDto;
 import com.neobis.cookscorner.dto.recipeingredient.RecipeIngredientInDto;
-import com.neobis.cookscorner.exception.InvalidRequestException;
 import com.neobis.cookscorner.exception.ResourceExistsException;
 import com.neobis.cookscorner.exception.ResourceNotFoundException;
 import com.neobis.cookscorner.model.*;
@@ -32,6 +31,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -51,7 +51,7 @@ public class RecipeServiceImpl implements RecipeService {
                     mapper.skip(Recipe::setIngredients);
                 });
 
-        User author = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User author = userService.getCurrentUser();
         Optional<Image> image = imageRepository.findById(recipeInDto.getImageId());
         if (image.isEmpty()) {
             throw new ResourceNotFoundException(
@@ -105,7 +105,7 @@ public class RecipeServiceImpl implements RecipeService {
             );
         }
         Recipe recipeModel = recipe.get();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUser();
 
         RecipeDetailsDto recipeDetailsDto = modelMapper.map(recipeModel, RecipeDetailsDto.class);
         recipeDetailsDto.setImageUrl(recipeModel.getImage().getImageUrl());
@@ -125,7 +125,7 @@ public class RecipeServiceImpl implements RecipeService {
             );
         }
         Recipe recipeModel = recipe.get();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUser();
 
         String resultText;
         if (recipeModel.getLikedByUsers().contains(user)) {
@@ -148,7 +148,7 @@ public class RecipeServiceImpl implements RecipeService {
             );
         }
         Recipe recipeModel = recipe.get();
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUser();
 
         String resultText;
         if (recipeModel.getSavedByUsers().contains(user)) {
@@ -161,5 +161,5 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(recipeModel);
         return resultText;
     }
-
+    
 }
