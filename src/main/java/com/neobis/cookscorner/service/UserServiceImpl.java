@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
                 UserSpecification.filterBySearchTerm(searchTerm), pageable);
         return users.map(user -> {
             UserListOutDto userListOutDto = new UserListOutDto();
+            userListOutDto.setId(user.getId());
             userListOutDto.setName(user.getName());
             if (user.getProfileImage() != null) {
                 userListOutDto.setProfileImageUrl(user.getProfileImage().getImageUrl());
