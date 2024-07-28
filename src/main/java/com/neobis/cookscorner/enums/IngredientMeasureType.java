@@ -14,4 +14,5 @@ public enum IngredientMeasureType {
     LITER,
     GRAM,
     KILOGRAM,
+    PIECE,
 }

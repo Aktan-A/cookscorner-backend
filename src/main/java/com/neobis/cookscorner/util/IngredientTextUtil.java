@@ -21,6 +21,7 @@ public class IngredientTextUtil {
             case IngredientMeasureType.LITER: return "L";
             case IngredientMeasureType.GRAM: return "g";
             case IngredientMeasureType.KILOGRAM: return "kg";
+            case IngredientMeasureType.PIECE: return "pc";
             default: return "";
         }
     }
