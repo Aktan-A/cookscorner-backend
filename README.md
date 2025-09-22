@@ -1,8 +1,5 @@
 # cookscorner-backend
 
-## CooksCorner ERD
-![alt cookscorner-erd](cookscorner-erd.png)
-
 ## Running locally
 
 ### With maven command line
